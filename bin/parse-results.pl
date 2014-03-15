@@ -10,13 +10,19 @@ die("A --reads file must be provided") if $reads_file eq "";
 
 print_system_info();
 
+my ($n_reads, $n_bases, $read_length) = estimate_sequences_in_file($reads_file);
+print "# Estimated reads: $n_reads\n";
+print "# Estimated read length: $read_length\n";
+print "# Estimated bases: $n_bases\n\n";
+printf("#%7s\t%8s\t%8s\t%s\t%s\t%s\n", "program", "Wall time", "CPU secs", "us/bp", "Memory", "bytes/bp");
+
 foreach my $file (@ARGV) {
-    results_for_file($file);
+    results_for_file($file, $n_bases);
 }
 
 sub results_for_file
 {
-    my($filename) = @_;
+    my($filename, $n_bases) = @_;
 
     my $name = "";
     my $cpu_time = 0;
@@ -41,15 +47,51 @@ sub results_for_file
         }
     }
 
-    printf("%10s\t%6s\t%10s\t%6s\n", $name, $cpu_time, $wall_time, kb2mb($max_memory));
+    my $uspb = $cpu_time * 1000000 / $n_bases;
+    my $bpb = $max_memory * 1024 / $n_bases;
+    printf("%8s\t%8s\t%8s\t%.2f\t%s\t%.2f\n", $name, $wall_time, $cpu_time, $uspb, kb2mb($max_memory), $bpb);
     close(F);
 }
 
-sub estimate_bases_in_file
+sub estimate_sequences_in_file
 {
     my($file) = @_;
 
     die("Only fastq is supported") unless $file =~ /.fastq$/;
+
+    my $filesize = -s $file;
+
+    # Count the number of bytes and average read length
+    # for the first and last N records of the file. We
+    # use these values to estimate the total number of records in the file.
+    my $read_lines = 40000;
+    my $half_lines = $read_lines / 2;
+    my $read_records = $read_lines / 4;
+    my @lines = `head -$half_lines $file`;
+    push @lines, `tail -$half_lines $file`;
+
+    # Confirm we read "proper" fastq by checking the first
+    # and third line of each record for the expected tokens
+    for(my $i = 0; $i < scalar(@lines); $i += 2) {
+        my $tok = ($i % 4 == 0) ? "@" : "+";
+        if(substr($lines[$i],0,1) ne $tok) {
+            die("Invalid FASTQ");
+        }
+    }
+
+    # Count the number of bytes and bases read
+    my $read_bytes = 0;
+    my $read_sequence = 0;
+    for(my $i = 0; $i < scalar(@lines); $i++) {
+        $read_bytes += length($lines[$i]);
+        $read_sequence += (length($lines[$i]) - 1) if (($i % 4) == 1);
+    }
+    
+    my $average_bytes = $read_bytes / $read_records;
+    my $average_sequence = $read_sequence / $read_records;
+    my $total_records = int($filesize / $average_bytes);
+    my $total_bases = int($total_records * $average_sequence);
+    return ($total_records, $total_bases, $average_sequence);
 }
 
 sub print_system_info
@@ -62,7 +104,7 @@ sub print_system_info
 
             # Remove extra whitespace from model
             my $f = join(" ", split(' ', $1));
-            print "#CPU: " . $f . "\n";
+            print "# CPU: " . $f . "\n";
             $model_printed = 1;
         }
     }
@@ -71,7 +113,7 @@ sub print_system_info
     open(P, "cat /proc/meminfo|");
     while(<P>) {
         if(/MemTotal:\s+(\d+)/) {
-            print "#Memory: " . kb2mb($1) . "\n";
+            print "# Memory: " . kb2mb($1) . "\n";
         }
     }
     close(P);
