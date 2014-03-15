@@ -4,7 +4,10 @@ SHELL=/bin/bash -o pipefail
 .SECONDARY:
 
 # Which programs do we want to run?
-PROGRAMS=ropebwt ropebwt2 beetl
+INSTALL_PROGRAMS=$(addprefix programs/, ropebwt ropebwt2 beetl)
+
+# Which programs do we want to run?
+RUN_PROGRAMS=ropebwt ropebwt2 beetl-bcr beetl-ext
 
 # The input data to use
 # This can be overridden on the command line
@@ -13,7 +16,7 @@ DATASET=test.small
 #
 # Build the output file names, of the form results/<dataset>/<program>.profile
 # 
-PROFILES := $(addsuffix .profile, $(addprefix results/$(DATASET)/, $(PROGRAMS)))
+PROFILES := $(addsuffix .profile, $(addprefix results/$(DATASET)/, $(RUN_PROGRAMS)))
 default: $(PROFILES)
 
 #
@@ -34,7 +37,7 @@ programs/%:
 # 
 # Benchmark a program
 #
-results/$(DATASET)/%.profile: programs/% test/$(DATASET).fastq
+results/$(DATASET)/%.profile: $(INSTALL_PROGRAMS) test/$(DATASET).fastq
 	mkdir -p results/$(DATASET)
 	bin/profile.sh bin/run-$*.sh test/$(DATASET).fastq 2> $@
 
