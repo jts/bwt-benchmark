@@ -11,6 +11,7 @@ die("A --reads file must be provided") if $reads_file eq "";
 print_system_info();
 
 my ($n_reads, $n_bases, $read_length) = estimate_sequences_in_file($reads_file);
+print "# Dataset: $reads_file\n";
 print "# Estimated reads: $n_reads\n";
 print "# Estimated read length: $read_length\n";
 print "# Estimated bases: $n_bases\n\n";

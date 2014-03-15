@@ -15,6 +15,7 @@ Example output on a fairly old desktop:
 ```
 # CPU: Intel(R) Core(TM) i5 CPU 750 @ 2.67GHz
 # Maximum Memory: 16045.9 MB
+# Dataset: test/ecoli.fastq
 # Estimated reads: 5065461
 # Estimated read length: 101
 # Estimated bases: 511611561
