@@ -30,6 +30,12 @@ test/ecoli.fastq:
 	zcat SRR314665_1.fastq.gz SRR314665_2.fastq.gz > test/ecoli.fastq
 	rm SRR314665_1.fastq.gz SRR314665_2.fastq.gz
 
+test/celegans.fastq:
+	wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR065/SRR065390/SRR065390_1.fastq.gz 
+	wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR065/SRR065390/SRR065390_2.fastq.gz 
+	zcat SRR065390_1.fastq.gz SRR065390_2.fastq.gz > test/celegans.fastq
+	rm SRR065390_1.fastq.gz SRR065390_2.fastq.gz
+
 #
 # Install a BWT construction algorithm
 #
