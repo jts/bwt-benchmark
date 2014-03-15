@@ -14,7 +14,7 @@ my ($n_reads, $n_bases, $read_length) = estimate_sequences_in_file($reads_file);
 print "# Estimated reads: $n_reads\n";
 print "# Estimated read length: $read_length\n";
 print "# Estimated bases: $n_bases\n\n";
-printf("%8s\t%10s\t%8s\t%5s\t%8s\t%8s\n", "#program", "Wall time", "CPU secs", "us/bp", "Memory", "bytes/bp");
+printf("%8s\t%10s\t%8s\t%5s\t%8s\t%8s\n", "#program", "Wall time", "CPU (s)", "us/bp", "Mem (MB)", "bytes/bp");
 
 foreach my $file (@ARGV) {
     results_for_file($file, $n_bases);
@@ -113,7 +113,7 @@ sub print_system_info
     open(P, "cat /proc/meminfo|");
     while(<P>) {
         if(/MemTotal:\s+(\d+)/) {
-            print "# Memory: " . kb2mb($1) . "\n";
+            print "# Maximum Memory: " . kb2mb($1) . " MB\n";
         }
     }
     close(P);
@@ -123,5 +123,5 @@ sub print_system_info
 sub kb2mb
 {
     my($kb) = @_;
-    return sprintf("%.1fM", ($kb / (1024)));
+    return sprintf("%.1f", ($kb / (1024)));
 }
