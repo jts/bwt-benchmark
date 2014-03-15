@@ -14,7 +14,7 @@ my ($n_reads, $n_bases, $read_length) = estimate_sequences_in_file($reads_file);
 print "# Estimated reads: $n_reads\n";
 print "# Estimated read length: $read_length\n";
 print "# Estimated bases: $n_bases\n\n";
-printf("#%7s\t%8s\t%8s\t%s\t%s\t%s\n", "program", "Wall time", "CPU secs", "us/bp", "Memory", "bytes/bp");
+printf("%8s\t%10s\t%8s\t%5s\t%8s\t%8s\n", "#program", "Wall time", "CPU secs", "us/bp", "Memory", "bytes/bp");
 
 foreach my $file (@ARGV) {
     results_for_file($file, $n_bases);
@@ -49,7 +49,7 @@ sub results_for_file
 
     my $uspb = $cpu_time * 1000000 / $n_bases;
     my $bpb = $max_memory * 1024 / $n_bases;
-    printf("%8s\t%8s\t%8s\t%.2f\t%s\t%.2f\n", $name, $wall_time, $cpu_time, $uspb, kb2mb($max_memory), $bpb);
+    printf("%8s\t%10s\t%8s\t%5.2f\t%8s\t%8.2f\n", $name, $wall_time, $cpu_time, $uspb, kb2mb($max_memory), $bpb);
     close(F);
 }
 
