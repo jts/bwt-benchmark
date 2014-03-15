@@ -22,8 +22,8 @@ default: $(PROFILES)
 test/ecoli.fastq:
 	wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR314/SRR314665/SRR314665_1.fastq.gz
 	wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR314/SRR314665/SRR314665_2.fastq.gz
-	zcat SRR314665_1.fastq SRR314665_2.fastq > test/ecoli.fastq
-	rm SRR314665_1.fastq SRR314665_2.fastq
+	zcat SRR314665_1.fastq.gz SRR314665_2.fastq.gz > test/ecoli.fastq
+	rm SRR314665_1.fastq.gz SRR314665_2.fastq.gz
 
 #
 # Install a BWT construction algorithm
