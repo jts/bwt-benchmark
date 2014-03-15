@@ -2,4 +2,4 @@
 
 IN=$1
 
-ropebwt/ropebwt $IN > ropebwt.out
+programs/ropebwt/ropebwt -o ropebwt.out $IN 2>ropebwt.stderr
