@@ -3,10 +3,12 @@ SHELL=/bin/bash -o pipefail
 # Do not delete intermediate files
 .SECONDARY:
 
-# Which programs do we want to run?
+# Which programs do we want to install
+# There must be a bin/install-X.sh script for each
 INSTALL_PROGRAMS=$(addprefix programs/, ropebwt ropebwt2 beetl)
 
-# Which programs do we want to run?
+# Which programs/algorithms do we want to run
+# There must be a bin/run-X.sh script for each
 RUN_PROGRAMS=ropebwt ropebwt2 beetl-bcr beetl-ext
 
 # The input data to use
