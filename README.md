@@ -23,6 +23,7 @@ Example output on a fairly old desktop:
 #program	 Wall time	 CPU (s)	us/bp	Mem (MB)	bytes/bp
 beetl-bcr	   2:00.50	  215.09	 0.42	   164.4	    0.34
 beetl-ext	  13:06.57	  540.88	 1.06	     2.0	    0.00
-ropebwt2	  14:14.29	  842.59	 1.65	   301.6	    0.62
- ropebwt	   3:02.13	  175.77	 0.34	   461.6	    0.95
+ropebwt2-lite	   2:05.55	  320.30	 0.63	  1030.6	    2.11
+ropebwt2	   1:54.73	  303.40	 0.59	  1753.7	    3.59
+ ropebwt	   1:43.70	  214.53	 0.42	   472.0	    0.97
 ```
