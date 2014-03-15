@@ -4,24 +4,45 @@ SHELL=/bin/bash -o pipefail
 .SECONDARY:
 
 # Which programs do we want to run?
-# There needs to be bin/install-X.sh and bin/run-X.sh for these
 PROGRAMS=ropebwt ropebwt2 beetl
 
 # The input data to use
-INPUT=test/test.small.fastq
+# This can be overridden on the command line
+DATASET=test.small
 
-# This matches a program name like ropebwt and installs it
+#
+# Build the output file names, of the form results/<dataset>/<program>.profile
+# 
+PROFILES := $(addsuffix .profile, $(addprefix results/$(DATASET)/, $(PROGRAMS)))
+default: $(PROFILES)
+
+#
+# Download input data sets
+#
+test/ecoli.fastq:
+	wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR314/SRR314665/SRR314665_1.fastq.gz
+	wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR314/SRR314665/SRR314665_2.fastq.gz
+	zcat SRR314665_1.fastq SRR314665_2.fastq > test/ecoli.fastq
+	rm SRR314665_1.fastq SRR314665_2.fastq
+
+#
+# Install a BWT construction algorithm
+#
 programs/%:
 	bin/install-$*.sh
 
-# Run the benchmark for a program
-results/%.profile: programs/%
-	mkdir -p results
-	bin/profile.sh bin/run-$*.sh $(INPUT) 2> $@
+# 
+# Benchmark a program
+#
+results/$(DATASET)/%.profile: programs/% test/$(DATASET).fastq
+	mkdir -p results/$(DATASET)
+	bin/profile.sh bin/run-$*.sh test/$(DATASET).fastq 2> $@
 
-# Clean things up
+#
+# Clean up
+#
 clean-output:
 	rm *.out *.stderr beetl.out-*
 
 clean-results:
-	rm results/*
+	rm results/*/*
