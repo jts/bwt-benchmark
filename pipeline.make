@@ -9,7 +9,7 @@ INSTALL_PROGRAMS=$(addprefix programs/, ropebwt ropebwt2 beetl)
 
 # Which programs/algorithms do we want to run
 # There must be a bin/run-X.sh script for each
-RUN_PROGRAMS=ropebwt ropebwt2 ropebwt2-lite beetl-bcr beetl-ext
+RUN_PROGRAMS=ropebwt ropebwt2 ropebwt2-m512m beetl-bcr beetl-ext
 
 # The input data to use
 # This can be overridden on the command line

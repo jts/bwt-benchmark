@@ -15,7 +15,7 @@ print "# Dataset: $reads_file\n";
 print "# Estimated reads: $n_reads\n";
 print "# Estimated read length: $read_length\n";
 print "# Estimated bases: $n_bases\n\n";
-printf("%-14s\t%10s\t%8s\t%5s\t%8s\t%8s\n", "#program", "Wall time", "CPU (s)", "us/bp", "Mem (MB)", "bytes/bp");
+printf("%-14s\t%10s\t%8s\t%5s\t%8s\t%8s\t%s\n", "#program", "Wall time", "CPU (s)", "us/bp", "Mem (MB)", "bytes/bp", "options");
 
 foreach my $file (@ARGV) {
     results_for_file($file, $n_bases);
@@ -29,10 +29,10 @@ sub results_for_file
     my $cpu_time = 0;
     my $wall_time = 0;
     my $max_memory = 0;
-
+    my $options = "";
     my $base = basename($filename);
-    my ($name) = ($base =~ /(\S*).profile/);
-
+    my ($script) = ($base =~ /(\S*).profile/);
+    my ($name) = split("-", $script);    
     open(F, $filename);
     while(<F>) {
         if(/User .*: (.*)$/) {
@@ -46,11 +46,16 @@ sub results_for_file
         if(/Maximum resident .*: (.*)$/) {
             $max_memory = $1;
         }
+        
+        if(/Options: (.*)$/) {
+            $options = $1;
+        }
+
     }
 
     my $uspb = $cpu_time * 1000000 / $n_bases;
     my $bpb = $max_memory * 1024 / $n_bases;
-    printf("%-14s\t%10s\t%8s\t%5.2f\t%8s\t%8.2f\n", $name, $wall_time, $cpu_time, $uspb, kb2mb($max_memory), $bpb);
+    printf("%-14s\t%10s\t%8s\t%5.2f\t%8s\t%8.2f\t%s\n", $name, $wall_time, $cpu_time, $uspb, kb2mb($max_memory), $bpb, $options);
     close(F);
 }
 

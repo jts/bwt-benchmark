@@ -2,4 +2,6 @@
 
 IN=$1
 
-programs/beetl/bin/beetl bwt -a ext --input $IN --output beetl.out --output-format ASCII --concatenate-output 2> beetl.stderr > beetl.stdout
+OPT="-a ext --output-format RLE"
+echo -e "\tOptions: $OPT" 1>&2
+programs/beetl/bin/beetl bwt --input $IN --output beetl.out $OPT 2> beetl.stderr > beetl.stdout

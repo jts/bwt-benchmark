@@ -2,4 +2,6 @@
 
 IN=$1
 
-programs/ropebwt/ropebwt -t -a bcr -o ropebwt.bwt $IN > ropebwt.stdout 2>ropebwt.stderr
+OPT="-bRt -a bcr"
+echo -e "\tOptions: $OPT" 1>&2
+programs/ropebwt/ropebwt $OPT -o ropebwt.bwt $IN > ropebwt.stdout 2>ropebwt.stderr
