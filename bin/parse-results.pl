@@ -4,7 +4,9 @@ use Getopt::Long;
 use File::Basename;
 
 my $reads_file = "";
-GetOptions("reads=s" => \$reads_file);
+my $fix_time_bug = 0;
+GetOptions("reads=s" => \$reads_file,
+           "fix-time-bug" => \$fix_time_bug);
 
 die("A --reads file must be provided") if $reads_file eq "";
 
@@ -45,6 +47,7 @@ sub results_for_file
 
         if(/Maximum resident .*: (.*)$/) {
             $max_memory = $1;
+            $max_memory /= 4 if $fix_time_bug;
         }
         
         if(/Options: (.*)$/) {
