@@ -36,6 +36,14 @@ test/celegans.fastq:
 	zcat SRR065390_1.fastq.gz SRR065390_2.fastq.gz > test/celegans.fastq
 	rm SRR065390_1.fastq.gz SRR065390_2.fastq.gz
 
+HUMAN_DIR=ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR091/
+#HUMAN_RUNS=ERR091571 ERR091572 ERR091573 ERR091574
+HUMAN_RUNS=ERR091571 ERR091572
+test/human.fastq:
+	$(foreach id, $(HUMAN_RUNS), \
+                wget $(HUMAN_DIR)/$(id)/$(id)_1.fastq.gz \
+                     $(HUMAN_DIR)/$(id)/$(id)_2.fastq.gz)
+	zcat ERR09157*.fastq.gz > $@
 #
 # Install a BWT construction algorithm
 #
